@@ -1,0 +1,1801 @@
+/* ================================================================
+   SCHOOL CARE — STYLESHEET UTAMA
+   Sistem Pengaduan Sarana Sekolah, SMK Negeri 5 Surakarta
+
+   Daftar isi cepat (cari komentar bertanda ===):
+   1. Halaman Login
+   2. Kerangka Aplikasi (Sidebar + Topbar)
+   3. Komponen Halaman Umum (Hero, Stats, Panel, Tabel, Timeline)
+   4. Halaman Ajukan Laporan
+   5. Halaman Laporan Saya / Antrean Laporan
+   6. Halaman Data Master
+   7. Halaman Profil
+   8. Modal & Toast
+   9-10. Responsive (tablet & mobile)
+   11. Aksesibilitas
+   ================================================================ */
+
+:root {
+--ink:oklch(24% .035 265);
+  --muted:oklch(53% .035 265);
+  --paper:oklch(97% .012 85);
+  --surface:oklch(99% .008 85);
+  --surface2:oklch(94% .018 85);
+  --line:oklch(88% .025 265);
+  --navy:oklch(30% .085 266);
+  --navy2:oklch(25% .085 266);
+  --blue:oklch(63% .16 253);
+  --blueSoft:oklch(91% .055 250);
+  --coral:oklch(70% .16 35);
+  --coralSoft:oklch(93% .055 35);
+  --mint:oklch(74% .13 160);
+  --mintSoft:oklch(92% .055 160);
+  --yellow:oklch(83% .15 90);
+  --yellowSoft:oklch(94% .07 90);
+  --danger:oklch(61% .17 25);
+  --shadow:0 14px 34px oklch(30% .06 260 / .09);
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+
+* {
+  box-sizing:border-box;
+}
+
+html {
+  scroll-behavior:smooth;
+}
+
+body {
+  margin:0;
+  min-width:320px;
+  background:var(--paper);
+  color:var(--ink);
+  font:16px/1.5 'DM Sans',system-ui,sans-serif;
+}
+
+button,input,select,textarea {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+button:disabled {
+  cursor:not-allowed;
+  opacity:.55;
+}
+
+a {
+  text-decoration:none;
+  color:inherit;
+}
+
+.hidden {
+  display:none!important;
+}
+
+.muted {
+  color:var(--muted);
+}
+
+.error {
+  color:var(--danger);
+  font-size:.8rem;
+}
+
+.success {
+  color:oklch(42% .1 157);
+  font-size:.8rem;
+}
+
+.small {
+  font-size:.8rem;
+}
+
+.eyebrow {
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--blue);
+}
+
+/* Auth */
+
+/* ============================================================
+   1. HALAMAN LOGIN (Auth screen kiri-kanan + form)
+   ============================================================ */
+.auth-screen {
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(380px,520px);
+  background:var(--paper);
+}
+
+.auth-visual {
+  position:relative;
+  overflow:hidden;
+  background:var(--navy);
+  color:var(--paper);
+  padding:clamp(28px,6vw,84px);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.auth-visual:before {
+  content:'';
+  position:absolute;
+  width:620px;
+  height:620px;
+  right:-190px;
+  top:-230px;
+  border:1px solid oklch(100% 0 0 / .18);
+  border-radius:50%;
+  box-shadow:0 0 0 42px oklch(100% 0 0 / .05),0 0 0 84px oklch(100% 0 0 / .05);
+}
+
+.auth-visual:after {
+  content:'';
+  position:absolute;
+  width:280px;
+  height:280px;
+  left:-130px;
+  bottom:-120px;
+  border-radius:50%;
+  background:var(--mint);
+  opacity:.9;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  position:relative;
+  z-index:1;
+}
+
+.brand-mark {
+  width:46px;
+  height:46px;
+  border-radius:15px;
+  background:var(--coral);
+  display:grid;
+  place-items:center;
+  color:var(--navy2);
+  font-size:1.5rem;
+  transform:rotate(-6deg);
+  box-shadow:6px 6px 0 oklch(55% .1 260 / .45);
+}
+
+.brand-name {
+  display:block;
+  font:700 1.2rem 'Space Grotesk',sans-serif;
+}
+
+.brand-sub {
+  display:block;
+  color:oklch(77% .035 255);
+  font-size:.72rem;
+  margin-top:2px;
+}
+
+.auth-copy {
+  position:relative;
+  z-index:1;
+  max-width:650px;
+}
+
+.auth-copy .eyebrow {
+  color:var(--yellow);
+}
+
+.auth-copy h1 {
+  font:700 clamp(2.6rem,6vw,5.7rem)/.98 'Space Grotesk',sans-serif;
+  letter-spacing:-.08em;
+  margin:18px 0;
+  max-width:720px;
+}
+
+.auth-copy h1 em {
+  font-style:normal;
+  color:var(--coral);
+}
+
+.auth-copy p {
+  color:oklch(83% .035 255);
+  font-size:1.05rem;
+  max-width:54ch;
+}
+
+.auth-points {
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  max-width:720px;
+}
+
+.auth-point {
+  padding-top:14px;
+  border-top:1px solid oklch(100% 0 0 / .18);
+}
+
+.auth-point strong {
+  display:block;
+  font:700 1rem 'Space Grotesk',sans-serif;
+}
+
+.auth-point span {
+  display:block;
+  color:oklch(78% .035 255);
+  font-size:.78rem;
+  margin-top:4px;
+}
+
+.auth-panel {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:32px;
+  background:var(--paper);
+}
+
+.login-card {
+  width:min(100%,410px);
+}
+
+.login-card h2 {
+  font:700 2rem/1.08 'Space Grotesk',sans-serif;
+  letter-spacing:-.06em;
+  margin:20px 0 8px;
+}
+
+.login-card>p {
+  color:var(--muted);
+  margin:0 0 26px;
+}
+
+.field {
+  display:grid;
+  gap:7px;
+  margin-bottom:16px;
+}
+
+.field label {
+  font-size:.78rem;
+  font-weight:700;
+}
+
+.required {
+  color:var(--danger);
+}
+
+input,select,textarea {
+  width:100%;
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--ink);
+  border-radius:12px;
+  padding:12px;
+  outline:0;
+  transition:border .2s,box-shadow .2s,background .2s;
+}
+
+input::placeholder,textarea::placeholder {
+  color:oklch(68% .025 265);
+}
+
+input:focus,select:focus,textarea:focus {
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px var(--blueSoft);
+  background:var(--paper);
+}
+
+textarea {
+  min-height:130px;
+  resize:vertical;
+}
+
+.password-wrap {
+  position:relative;
+}
+
+.password-wrap input {
+  padding-right:74px;
+}
+
+.show-pass {
+  position:absolute;
+  right:8px;
+  top:7px;
+  border:0;
+  background:transparent;
+  color:var(--blue);
+  font-size:.75rem;
+  font-weight:700;
+  padding:8px;
+}
+
+.login-options {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  font-size:.78rem;
+  color:var(--muted);
+  margin:2px 0 20px;
+}
+
+.checkline {
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.checkline input {
+  width:16px;
+  height:16px;
+  accent-color:var(--navy);
+}
+
+.btn {
+  border:0;
+  border-radius:13px;
+  min-height:44px;
+  padding:12px 16px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-weight:700;
+  transition:transform .2s var(--ease),box-shadow .2s,background .2s;
+}
+
+.btn:hover {
+  transform:translateY(-2px);
+}
+
+.btn-primary {
+  background:var(--navy);
+  color:var(--paper);
+  box-shadow:0 9px 18px oklch(30% .08 266 / .15);
+}
+
+.btn-primary:hover {
+  background:var(--navy2);
+  box-shadow:0 13px 23px oklch(30% .08 266 / .22);
+}
+
+.btn-soft {
+  background:var(--surface2);
+  color:var(--ink);
+}
+
+.btn-soft:hover {
+  background:var(--blueSoft);
+}
+
+.btn-coral {
+  background:var(--coral);
+  color:var(--navy2);
+}
+
+.btn-danger {
+  background:var(--coralSoft);
+  color:var(--danger);
+}
+
+.btn-full {
+  width:100%;
+}
+
+.demo-login {
+  margin-top:28px;
+  border-top:1px solid var(--line);
+  padding-top:18px;
+}
+
+.demo-login h3 {
+  font:700 .88rem 'Space Grotesk',sans-serif;
+  margin:0 0 10px;
+}
+
+.demo-account {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 12px;
+  background:var(--surface2);
+  border-radius:12px;
+  margin-top:8px;
+  font-size:.75rem;
+}
+
+.demo-account span {
+  color:var(--muted);
+}
+
+.demo-account button {
+  border:0;
+  background:transparent;
+  color:var(--blue);
+  font-weight:700;
+  font-size:.75rem;
+}
+
+/* App */
+
+/* ============================================================
+   2. KERANGKA APLIKASI (Sidebar + Topbar + area konten)
+   ============================================================ */
+.app-shell {
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:276px minmax(0,1fr);
+}
+
+
+/* --- 2a. Sidebar (menu navigasi kiri) --- */
+.sidebar {
+  position:sticky;
+  top:0;
+  height:100vh;
+  background:var(--navy);
+  color:var(--paper);
+  padding:28px 18px 18px;
+  display:flex;
+  flex-direction:column;
+  overflow:auto;
+}
+
+.sidebar .brand {
+  padding:0 10px 30px;
+}
+
+.sidebar .brand-sub {
+  color:oklch(77% .035 255);
+}
+
+.eyebrow.side {
+  color:oklch(76% .05 255);
+  margin:0 10px 10px;
+}
+
+.nav {
+  display:grid;
+  gap:5px;
+}
+
+.nav-btn {
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border:0;
+  border-radius:14px;
+  background:transparent;
+  color:oklch(82% .04 255);
+  padding:12px;
+  text-align:left;
+  transition:transform .2s var(--ease),background .2s,color .2s;
+}
+
+.nav-btn:hover {
+  transform:translateX(3px);
+  background:oklch(100% 0 0 / .08);
+  color:oklch(100% 0 0);
+}
+
+.nav-btn.active {
+  color:var(--navy2);
+  background:var(--yellow);
+  font-weight:700;
+  box-shadow:0 8px 20px oklch(20% .06 260 / .18);
+}
+
+.nav-emoji {
+  width:20px;
+  text-align:center;
+}
+
+.nav-badge {
+  margin-left:auto;
+  min-width:23px;
+  height:23px;
+  padding:0 6px;
+  border-radius:99px;
+  background:var(--coral);
+  color:var(--navy2);
+  display:grid;
+  place-items:center;
+  font-size:.72rem;
+  font-weight:700;
+}
+
+.sidebar-spacer {
+  flex:1;
+  min-height:24px;
+}
+
+.user-chip {
+  border-top:1px solid oklch(100% 0 0 / .12);
+  padding:16px 8px 0;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.avatar {
+  width:36px;
+  height:36px;
+  border-radius:13px;
+  background:var(--mint);
+  color:var(--navy2);
+  display:grid;
+  place-items:center;
+  font-weight:700;
+  font-size:.85rem;
+  flex:0 0 auto;
+}
+
+.user-chip strong {
+  display:block;
+  font-size:.83rem;
+}
+
+.user-chip small {
+  color:oklch(72% .04 255);
+  font-size:.72rem;
+}
+
+.logout-mini {
+  margin-left:auto;
+  border:0;
+  background:transparent;
+  color:oklch(78% .04 255);
+  font-size:1.1rem;
+  padding:8px;
+}
+
+.main {
+  min-width:0;
+  padding:24px clamp(18px,4vw,56px) 48px;
+}
+
+
+/* --- 2b. Topbar (breadcrumb, search, ikon) --- */
+.topbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  min-height:52px;
+  margin-bottom:28px;
+}
+
+.topbar-left {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.mobile-menu {
+  display:none;
+}
+
+.breadcrumb {
+  font-size:.79rem;
+  color:var(--muted);
+  white-space:nowrap;
+}
+
+.breadcrumb strong {
+  color:var(--ink);
+}
+
+.topbar-actions {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.search {
+  position:relative;
+}
+
+.search input {
+  width:min(220px,24vw);
+  padding-left:36px;
+}
+
+.search-icon {
+  position:absolute;
+  left:12px;
+  top:11px;
+  color:var(--muted);
+  font-size:.95rem;
+}
+
+.icon-btn {
+  width:40px;
+  height:40px;
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--ink);
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  transition:transform .2s var(--ease),background .2s;
+}
+
+.icon-btn:hover {
+  transform:translateY(-2px);
+  background:var(--blueSoft);
+}
+
+.role-switch {
+  border:1px solid var(--line);
+  background:var(--surface);
+  border-radius:12px;
+  padding:9px 10px;
+  color:var(--ink);
+  font-size:.8rem;
+  font-weight:600;
+}
+
+.page {
+  max-width:1420px;
+  margin:0 auto;
+}
+
+.page-screen {
+  display:none;
+  animation:pageIn .35s var(--ease) both;
+}
+
+.page-screen.active {
+  display:block;
+}
+
+@keyframes pageIn {
+  from {
+  opacity:0;
+  transform:translateY(8px);
+}
+
+to {
+  opacity:1;
+  transform:none;
+}
+
+;
+}
+
+
+/* ============================================================
+   3. KOMPONEN HALAMAN UMUM (dipakai di banyak halaman)
+   ============================================================ */
+.page-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:24px;
+  margin-bottom:28px;
+}
+
+.page-head h1 {
+  margin:0;
+  font:700 clamp(2rem,4vw,3.45rem)/1.04 'Space Grotesk',sans-serif;
+  letter-spacing:-.06em;
+  max-width:760px;
+  text-wrap:balance;
+}
+
+.page-head p {
+  margin:12px 0 0;
+  color:var(--muted);
+  max-width:670px;
+  text-wrap:pretty;
+}
+
+
+/* --- 3a. Hero banner (Ringkasan) --- */
+.hero {
+  background:var(--navy);
+  color:var(--paper);
+  border-radius:24px;
+  padding:clamp(24px,4vw,44px);
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr);
+  gap:30px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:var(--shadow);
+}
+
+.hero:after {
+  content:'';
+  position:absolute;
+  width:340px;
+  height:340px;
+  right:-80px;
+  top:-120px;
+  border:1px solid oklch(100% 0 0 / .15);
+  border-radius:50%;
+  box-shadow:0 0 0 28px oklch(100% 0 0 / .045),0 0 0 56px oklch(100% 0 0 / .045);
+  pointer-events:none;
+}
+
+.hero .eyebrow {
+  color:var(--yellow);
+}
+
+.hero h2 {
+  font:700 clamp(1.65rem,3vw,2.75rem)/1.08 'Space Grotesk',sans-serif;
+  letter-spacing:-.055em;
+  margin:0;
+  max-width:620px;
+}
+
+.hero p {
+  margin:15px 0 24px;
+  max-width:58ch;
+  color:oklch(83% .035 255);
+}
+
+.hero-actions {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.hero .btn-primary {
+  background:var(--yellow);
+  color:var(--navy2);
+}
+
+.hero .btn-soft {
+  background:oklch(100% 0 0 / .1);
+  color:var(--paper);
+}
+
+.hero-side {
+  align-self:end;
+  position:relative;
+  z-index:1;
+}
+
+.mini-ticket {
+  background:oklch(100% 0 0 / .1);
+  border:1px solid oklch(100% 0 0 / .15);
+  border-radius:18px;
+  padding:16px;
+  transform:rotate(2deg);
+}
+
+.mini-ticket-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.mini-ticket-id {
+  font:700 1rem 'Space Grotesk',sans-serif;
+}
+
+.pill {
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  border-radius:99px;
+  padding:5px 9px;
+  font-size:.72rem;
+  font-weight:700;
+  line-height:1;
+  white-space:nowrap;
+}
+
+.pill-yellow {
+  color:oklch(37% .07 80);
+  background:var(--yellowSoft);
+}
+
+.pill-blue {
+  color:oklch(35% .09 250);
+  background:var(--blueSoft);
+}
+
+.pill-mint {
+  color:oklch(32% .08 155);
+  background:var(--mintSoft);
+}
+
+.pill-coral {
+  color:oklch(43% .11 30);
+  background:var(--coralSoft);
+}
+
+.pill-gray {
+  color:var(--muted);
+  background:var(--surface2);
+}
+
+.mini-ticket h3 {
+  margin:0 0 6px;
+  font-size:1rem;
+}
+
+.mini-ticket p {
+  margin:0;
+  font-size:.8rem;
+  color:oklch(79% .035 255);
+}
+
+.mini-ticket-footer {
+  display:flex;
+  justify-content:space-between;
+  margin-top:18px;
+  color:oklch(78% .035 255);
+  font-size:.74rem;
+}
+
+.progress {
+  height:6px;
+  background:oklch(100% 0 0 / .14);
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:7px;
+}
+
+.progress span {
+  display:block;
+  height:100%;
+  border-radius:inherit;
+  background:var(--mint);
+}
+
+
+/* --- 3b. Kartu statistik (Ringkasan) --- */
+.stats {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  margin:28px 0;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+
+.stat {
+  min-height:126px;
+  padding:22px 20px;
+  border-right:1px solid var(--line);
+}
+
+.stat:last-child {
+  border-right:0;
+}
+
+.stat-label {
+  color:var(--muted);
+  font-size:.77rem;
+}
+
+.stat-value {
+  font:700 2rem/1.1 'Space Grotesk',sans-serif;
+  letter-spacing:-.06em;
+  margin-top:12px;
+  font-variant-numeric:tabular-nums;
+}
+
+.stat-note {
+  font-size:.73rem;
+  color:var(--muted);
+  margin-top:7px;
+}
+
+.stat-note.up {
+  color:oklch(42% .1 157);
+}
+
+
+/* --- 3c. Grid tabel + panel samping (Ringkasan) --- */
+.content-grid {
+  display:grid;
+  grid-template-columns:minmax(0,1.4fr) minmax(300px,.6fr);
+  gap:28px;
+  align-items:start;
+}
+
+
+/* --- 3d. Panel/card generik --- */
+.panel {
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:24px;
+  box-shadow:0 2px 10px oklch(30% .04 260 / .05);
+}
+
+.panel-head {
+  padding:22px 22px 14px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.panel-head h2 {
+  font:700 1.15rem/1.2 'Space Grotesk',sans-serif;
+  letter-spacing:-.035em;
+  margin:0;
+}
+
+.panel-head p {
+  margin:5px 0 0;
+  font-size:.78rem;
+  color:var(--muted);
+}
+
+.panel-body {
+  padding:0 22px 22px;
+}
+
+.filter-row {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+
+.filter {
+  border:1px solid var(--line);
+  background:var(--paper);
+  padding:8px 10px;
+  border-radius:10px;
+  color:var(--muted);
+  font-size:.76rem;
+  font-weight:600;
+}
+
+.filter.active {
+  color:var(--ink);
+  background:var(--yellowSoft);
+  border-color:oklch(82% .11 90);
+}
+
+.table-wrap {
+  overflow-x:auto;
+}
+
+
+/* --- 3e. Tabel laporan --- */
+table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:.82rem;
+  min-width:650px;
+}
+
+th {
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:.66rem;
+  font-weight:700;
+  text-align:left;
+  padding:12px 10px;
+  border-bottom:1px solid var(--line);
+}
+
+td {
+  padding:15px 10px;
+  border-bottom:1px solid var(--line);
+  vertical-align:middle;
+}
+
+tr:last-child td {
+  border-bottom:0;
+}
+
+.report-title {
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.report-dot {
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  flex:0 0 auto;
+}
+
+.report-title strong {
+  display:block;
+  font-weight:700;
+}
+
+.report-title small {
+  display:block;
+  color:var(--muted);
+  margin-top:2px;
+  font-size:.72rem;
+}
+
+.table-action {
+  border:0;
+  background:transparent;
+  color:var(--blue);
+  font-weight:700;
+  font-size:.77rem;
+  padding:7px 0;
+}
+
+.table-action:hover {
+  text-decoration:underline;
+}
+
+.side-stack {
+  display:grid;
+  gap:18px;
+}
+
+.status-map {
+  padding:0 22px 22px;
+  display:grid;
+  gap:15px;
+}
+
+.status-row {
+  display:grid;
+  grid-template-columns:94px 1fr 30px;
+  align-items:center;
+  gap:10px;
+  font-size:.76rem;
+}
+
+.status-row>span:first-child {
+  color:var(--muted);
+}
+
+.status-bar {
+  height:9px;
+  background:var(--surface2);
+  border-radius:99px;
+  overflow:hidden;
+}
+
+.status-bar span {
+  display:block;
+  height:100%;
+  border-radius:inherit;
+}
+
+.status-count {
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+
+.tip-panel {
+  background:var(--yellowSoft);
+  border-color:oklch(86% .1 90);
+}
+
+.tip-panel .panel-body {
+  padding-top:2px;
+}
+
+.tip-panel p {
+  margin:0;
+  color:oklch(38% .05 90);
+  font-size:.82rem;
+}
+
+
+/* --- 3f. Timeline aktivitas --- */
+.timeline {
+  padding:8px 22px 22px;
+}
+
+.timeline-item {
+  position:relative;
+  display:grid;
+  grid-template-columns:40px 1fr;
+  gap:12px;
+  padding-bottom:19px;
+}
+
+.timeline-item:last-child {
+  padding-bottom:0;
+}
+
+.timeline-item:not(:last-child):before {
+  content:'';
+  position:absolute;
+  left:19px;
+  top:32px;
+  bottom:-2px;
+  width:1px;
+  background:var(--line);
+}
+
+.timeline-mark {
+  width:40px;
+  height:40px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  color:var(--navy2);
+  z-index:1;
+}
+
+.timeline-mark.blue {
+  background:var(--blueSoft);
+}
+
+.timeline-mark.mint {
+  background:var(--mintSoft);
+}
+
+.timeline-mark.coral {
+  background:var(--coralSoft);
+}
+
+.timeline-copy strong {
+  font-size:.82rem;
+  display:block;
+  margin:2px 0 3px;
+}
+
+.timeline-copy p {
+  color:var(--muted);
+  font-size:.75rem;
+  margin:0;
+}
+
+.empty-state {
+  text-align:center;
+  padding:42px 20px;
+  color:var(--muted);
+}
+
+.empty-state strong {
+  color:var(--ink);
+  display:block;
+  margin-bottom:4px;
+}
+
+/* Forms, lists, admin */
+
+/* ============================================================
+   4. HALAMAN AJUKAN LAPORAN (form dua kolom)
+   ============================================================ */
+.form-layout {
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);
+  gap:28px;
+  align-items:start;
+}
+
+.form-panel {
+  padding:26px;
+}
+
+.form-panel h2 {
+  font:700 1.35rem/1.2 'Space Grotesk',sans-serif;
+  letter-spacing:-.04em;
+  margin:0 0 6px;
+}
+
+.form-panel>p {
+  color:var(--muted);
+  font-size:.83rem;
+  margin:0 0 26px;
+}
+
+.form-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px 14px;
+}
+
+.field.full {
+  grid-column:1/-1;
+}
+
+.upload {
+  border:1.5px dashed oklch(72% .08 252);
+  background:var(--blueSoft);
+  border-radius:15px;
+  padding:22px;
+  text-align:center;
+  color:oklch(38% .08 252);
+  display:block;
+}
+
+.upload strong {
+  display:block;
+  font-size:.82rem;
+}
+
+.upload span {
+  display:block;
+  font-size:.73rem;
+  margin-top:4px;
+}
+
+.form-footer {
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:24px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+}
+
+
+/* --- 4a. Panel "setelah kamu kirim" --- */
+.process-panel {
+  padding:24px;
+  background:var(--navy);
+  color:var(--paper);
+  border-radius:24px;
+}
+
+.process-panel h3 {
+  font:700 1.2rem 'Space Grotesk',sans-serif;
+  margin:0 0 7px;
+}
+
+.process-panel>p {
+  color:oklch(80% .04 255);
+  font-size:.8rem;
+  margin:0 0 22px;
+}
+
+.process-step {
+  display:grid;
+  grid-template-columns:30px 1fr;
+  gap:12px;
+  position:relative;
+  padding-bottom:22px;
+}
+
+.process-step:not(:last-child):before {
+  content:'';
+  position:absolute;
+  left:14px;
+  top:30px;
+  bottom:-1px;
+  width:1px;
+  background:oklch(100% 0 0 / .18);
+}
+
+.process-num {
+  width:30px;
+  height:30px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  color:var(--navy2);
+  background:var(--yellow);
+  font-weight:700;
+  font-size:.78rem;
+  z-index:1;
+}
+
+.process-step:nth-child(3) .process-num {
+  background:var(--mint);
+}
+
+.process-step:nth-child(4) .process-num {
+  background:var(--coral);
+}
+
+.process-step:nth-child(5) .process-num {
+  background:var(--blue);
+  color:var(--paper);
+}
+
+.process-step strong {
+  font-size:.81rem;
+  display:block;
+  margin-top:4px;
+}
+
+.process-step p {
+  font-size:.73rem;
+  color:oklch(78% .04 255);
+  margin:3px 0 0;
+}
+
+
+/* ============================================================
+   5. HALAMAN LAPORAN SAYA / ANTREAN LAPORAN (kartu & toolbar)
+   ============================================================ */
+.list-screen {
+  display:grid;
+  gap:22px;
+}
+
+.list-toolbar {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.list-toolbar h2 {
+  margin:0;
+  font:700 1.55rem 'Space Grotesk',sans-serif;
+  letter-spacing:-.04em;
+}
+
+.toolbar-actions {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.report-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(285px,1fr));
+  gap:16px;
+}
+
+
+/* --- 5a. Kartu satu laporan --- */
+.report-card {
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:18px;
+  display:grid;
+  gap:16px;
+  transition:transform .25s var(--ease),box-shadow .25s;
+}
+
+.report-card:hover {
+  transform:translateY(-3px);
+  box-shadow:var(--shadow);
+}
+
+.report-card-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.report-card-id {
+  font:700 .82rem 'Space Grotesk',sans-serif;
+  color:var(--blue);
+}
+
+.report-card h3 {
+  margin:5px 0 0;
+  font:700 1rem 'Space Grotesk',sans-serif;
+  letter-spacing:-.03em;
+}
+
+.report-card p {
+  margin:0;
+  color:var(--muted);
+  font-size:.78rem;
+}
+
+.report-meta {
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  padding-top:11px;
+  border-top:1px solid var(--line);
+}
+
+.report-meta span {
+  font-size:.72rem;
+  color:var(--muted);
+}
+
+
+/* ============================================================
+   6. HALAMAN DATA MASTER (khusus admin)
+   ============================================================ */
+.admin-grid {
+  display:grid;
+  grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr);
+  gap:24px;
+  align-items:start;
+}
+
+.admin-table {
+  overflow:auto;
+}
+
+.admin-table table {
+  min-width:820px;
+}
+
+.action-row {
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.master-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+}
+
+.master-list {
+  padding:0 22px 22px;
+}
+
+.master-item {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px 0;
+  border-bottom:1px solid var(--line);
+  font-size:.82rem;
+}
+
+.master-item:last-child {
+  border-bottom:0;
+}
+
+.master-item button {
+  border:0;
+  background:transparent;
+  color:var(--danger);
+  font-weight:700;
+}
+
+
+/* ============================================================
+   7. HALAMAN PROFIL
+   ============================================================ */
+.profile-grid {
+  display:grid;
+  grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);
+  gap:24px;
+  align-items:start;
+}
+
+.profile-card {
+  padding:28px;
+  text-align:center;
+}
+
+.profile-card .big-avatar {
+  width:82px;
+  height:82px;
+  margin:0 auto 14px;
+  border-radius:26px;
+  background:var(--mint);
+  display:grid;
+  place-items:center;
+  font:700 1.6rem 'Space Grotesk',sans-serif;
+}
+
+.profile-card h2 {
+  font:700 1.35rem 'Space Grotesk',sans-serif;
+  margin:0;
+}
+
+.profile-card p {
+  color:var(--muted);
+  font-size:.82rem;
+  margin:6px 0 20px;
+}
+
+
+/* ============================================================
+   8. MODAL & TOAST NOTIFIKASI
+   ============================================================ */
+.modal {
+  border:0;
+  border-radius:20px;
+  padding:0;
+  width:min(560px,calc(100vw - 30px));
+  color:var(--ink);
+  box-shadow:0 24px 80px oklch(20% .08 260 / .25);
+}
+
+.modal::backdrop {
+  background:oklch(20% .06 260 / .45);
+}
+
+.modal-inner {
+  padding:24px;
+}
+
+.modal-head {
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:flex-start;
+  border-bottom:1px solid var(--line);
+  padding-bottom:16px;
+}
+
+.modal-head h2 {
+  font:700 1.3rem 'Space Grotesk',sans-serif;
+  margin:0;
+  letter-spacing:-.04em;
+}
+
+.modal-head p {
+  font-size:.78rem;
+  color:var(--muted);
+  margin:5px 0 0;
+}
+
+.detail-line {
+  display:grid;
+  grid-template-columns:115px 1fr;
+  gap:10px;
+  padding:11px 0;
+  border-bottom:1px solid var(--line);
+  font-size:.8rem;
+}
+
+.detail-line:last-child {
+  border-bottom:0;
+}
+
+.detail-line>span:first-child {
+  color:var(--muted);
+}
+
+.modal-actions {
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+
+.toast {
+  position:fixed;
+  z-index:30;
+  right:22px;
+  bottom:22px;
+  background:var(--navy);
+  color:var(--paper);
+  border-radius:14px;
+  padding:13px 16px;
+  box-shadow:var(--shadow);
+  transform:translateY(20px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s var(--ease),transform .25s var(--ease);
+  font-size:.82rem;
+}
+
+.toast.show {
+  transform:none;
+  opacity:1;
+}
+
+.mobile-overlay {
+  display:none;
+}
+
+
+/* ============================================================
+   9. RESPONSIVE — TABLET (<=1100px)
+   ============================================================ */
+@media(max-width:1100px) {
+  .auth-screen {
+  grid-template-columns:1fr;
+}
+
+.auth-visual {
+  min-height:420px;
+}
+
+.auth-panel {
+  padding:42px;
+}
+
+.app-shell {
+  grid-template-columns:238px minmax(0,1fr);
+}
+
+.hero {
+  grid-template-columns:1fr;
+}
+
+.hero-side {
+  max-width:390px;
+}
+
+.content-grid,.form-layout,.admin-grid,.profile-grid {
+  grid-template-columns:1fr;
+}
+
+;
+}
+
+
+/* ============================================================
+   10. RESPONSIVE — MOBILE (<=760px)
+   ============================================================ */
+@media(max-width:760px) {
+  .auth-visual {
+  min-height:420px;
+  padding:28px;
+}
+
+.auth-copy h1 {
+  font-size:3.2rem;
+}
+
+.auth-points {
+  grid-template-columns:1fr;
+  gap:10px;
+}
+
+.auth-point {
+  padding-top:10px;
+}
+
+.auth-panel {
+  padding:28px 18px;
+}
+
+.app-shell {
+  display:block;
+}
+
+.sidebar {
+  position:fixed;
+  z-index:10;
+  inset:0 auto 0 0;
+  width:min(290px,86vw);
+  transform:translateX(-102%);
+  transition:transform .35s var(--ease);
+  box-shadow:20px 0 50px oklch(20% .08 260 / .2);
+}
+
+.sidebar.open {
+  transform:translateX(0);
+}
+
+.mobile-overlay {
+  position:fixed;
+  z-index:9;
+  inset:0;
+  background:oklch(20% .06 260 / .4);
+}
+
+.mobile-overlay.open {
+  display:block;
+}
+
+.main {
+  padding:16px 16px 36px;
+}
+
+.topbar {
+  margin-bottom:22px;
+}
+
+.mobile-menu {
+  display:grid;
+}
+
+.breadcrumb {
+  display:none;
+}
+
+.topbar-actions .search {
+  display:none;
+}
+
+.topbar-actions {
+  margin-left:auto;
+}
+
+.role-switch {
+  max-width:154px;
+}
+
+.page-head {
+  display:block;
+  margin-bottom:22px;
+}
+
+.page-head .btn {
+  margin-top:18px;
+  width:100%;
+}
+
+.hero {
+  padding:24px;
+  border-radius:20px;
+}
+
+.hero-side {
+  max-width:none;
+}
+
+.stats {
+  grid-template-columns:repeat(2,1fr);
+}
+
+.stat:nth-child(2) {
+  border-right:0;
+}
+
+.stat:nth-child(-n+2) {
+  border-bottom:1px solid var(--line);
+}
+
+.stat {
+  min-height:112px;
+  padding:18px 14px;
+}
+
+.stat-value {
+  font-size:1.65rem;
+}
+
+.panel-head,.panel-body {
+  padding-left:16px;
+  padding-right:16px;
+}
+
+.form-panel {
+  padding:20px;
+}
+
+.form-grid,.master-grid {
+  grid-template-columns:1fr;
+}
+
+.field.full {
+  grid-column:auto;
+}
+
+.toast {
+  right:16px;
+  left:16px;
+  bottom:16px;
+}
+
+;
+}
+
+
+/* ============================================================
+   11. AKSESIBILITAS — kurangi animasi jika diminta OS pengguna
+   ============================================================ */
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+  animation-duration:.01ms!important;
+  transition-duration:.01ms!important;
+  scroll-behavior:auto!important;
+}
+
+;
+}
+
+
+/* ================================================================
+   LOGIN V2: polished auth switch, usable forms, clearer feedback
+   ================================================================ */
+.auth-screen-v2{min-height:100vh}.auth-panel-v2{padding:clamp(22px,5vw,72px)}.auth-card-v2{width:min(100%,430px);max-height:calc(100vh - 40px);overflow:auto;padding:4px 4px 18px}.auth-switch{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--surface2);border-radius:14px;margin-bottom:30px}.auth-tab{min-height:42px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-weight:700;transition:background .2s var(--ease),color .2s var(--ease),transform .2s var(--ease)}.auth-tab:hover{color:var(--ink);transform:translateY(-1px)}.auth-tab.is-active{background:var(--surface);color:var(--navy);box-shadow:0 4px 12px oklch(30% .05 260 / .08)}.auth-form-wrap{display:none}.auth-form-wrap.is-active{display:block;animation:authIn .35s var(--ease) both}@keyframes authIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.auth-form-wrap h2{font:700 2.05rem/1.06 'Space Grotesk',sans-serif;letter-spacing:-.065em;margin:14px 0 8px}.form-lead{color:var(--muted);margin:0 0 24px}.auth-alert{display:grid;gap:3px;padding:12px 14px;border-radius:13px;margin:0 0 18px;font-size:.8rem}.auth-alert-error{background:var(--coralSoft);border:1px solid oklch(82% .09 25);color:var(--danger)}.auth-alert strong{font-weight:700}.auth-submit{margin-top:4px}.demo-login{margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}.demo-login h3{font:700 .88rem 'Space Grotesk',sans-serif;margin:0 0 10px}.demo-account{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 13px;border:1px solid var(--line);background:var(--surface);border-radius:13px;margin-top:8px;color:var(--ink);text-align:left;transition:border .2s var(--ease),transform .2s var(--ease),background .2s var(--ease)}.demo-account:hover{border-color:var(--blue);background:var(--blueSoft);transform:translateY(-2px)}.demo-account span{display:grid;gap:2px}.demo-account b{font-size:.78rem}.demo-account small{color:var(--muted);font-size:.72rem}.demo-account strong{color:var(--blue);font-size:.72rem;white-space:nowrap}.demo-password{margin:12px 0 0}.form-footnote{border-top:1px solid var(--line);padding-top:16px;margin-top:22px;color:var(--muted);font-size:.78rem}.auth-card-v2 input:invalid:not(:placeholder-shown){border-color:var(--coral)}.auth-card-v2 input:valid:not(:placeholder-shown){border-color:var(--mint)}.auth-card-v2 .show-pass{min-height:36px}.auth-card-v2 .field{margin-bottom:16px}@media(max-width:760px){.auth-screen-v2{display:block}.auth-screen-v2 .auth-visual{min-height:380px;padding:26px 20px 34px}.auth-screen-v2 .auth-copy h1{font-size:3rem}.auth-screen-v2 .auth-points{grid-template-columns:1fr 1fr 1fr}.auth-panel-v2{padding:26px 18px 38px}.auth-card-v2{max-height:none}.auth-switch{margin-bottom:24px}}@media(max-width:420px){.auth-screen-v2 .auth-points{grid-template-columns:1fr}.auth-screen-v2 .auth-point{border-top:0;padding-top:0}.auth-screen-v2 .auth-copy h1{font-size:2.6rem}}
+
+
+/* ================================================================
+   ACCOUNT MANAGEMENT: Admin-only page, separate from profile
+   ================================================================ */
+.account-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr);gap:24px;align-items:start}.account-create-panel{padding:26px}.account-panel-heading{display:flex;align-items:center;gap:13px;margin-bottom:24px}.account-panel-heading h2{font:700 1.35rem/1.2 'Space Grotesk',sans-serif;letter-spacing:-.04em;margin:0}.account-panel-heading p{color:var(--muted);font-size:.82rem;margin:4px 0 0}.account-panel-icon{width:42px;height:42px;border-radius:14px;background:var(--yellow);color:var(--navy2);display:grid;place-items:center;font-size:1.35rem;font-weight:700}.account-help-panel{padding:26px;background:var(--navy);color:var(--paper)}.account-help-panel h2{font:700 1.45rem/1.12 'Space Grotesk',sans-serif;letter-spacing:-.05em;margin:10px 0}.account-help-panel>p:not(.eyebrow){color:oklch(82% .035 255);font-size:.82rem;margin:0 0 22px}.role-note{display:grid;grid-template-columns:max-content 1fr;gap:10px;align-items:center;padding:13px 0;border-top:1px solid oklch(100% 0 0 / .14);font-size:.77rem;color:oklch(86% .03 255)}.accounts-list-panel{margin-top:24px}.accounts-table{min-width:760px}.account-avatar{width:32px;height:32px;border-radius:11px;background:var(--mint);color:var(--navy2);display:grid;place-items:center;font-size:.7rem;font-weight:700;flex:0 0 auto}.login-card-v3{max-height:none}.login-kicker{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.75rem;margin-bottom:24px}.login-kicker-dot{width:9px;height:9px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 5px var(--mintSoft)}.login-footer-note{padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.78rem;margin:24px 0 0}@media(max-width:1100px){.account-layout{grid-template-columns:1fr}}@media(max-width:760px){.account-create-panel{padding:20px}.account-help-panel{padding:20px}.accounts-list-panel{margin-top:18px}.account-panel-heading{align-items:flex-start}}
