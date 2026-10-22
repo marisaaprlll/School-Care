@@ -51,19 +51,39 @@
         const menuBtn = document.getElementById('mobileMenu');
         if (!sidebar || !menuBtn) return;
 
-        const closeMenu = () => {
+        const closeMenu = (restoreFocus = false) => {
             sidebar.classList.remove('open');
             overlay?.classList.remove('open');
+            document.body.classList.remove('mobile-menu-open');
+            menuBtn.setAttribute('aria-expanded', 'false');
+            menuBtn.setAttribute('aria-label', 'Buka menu');
+            if (restoreFocus) menuBtn.focus();
         };
         const openMenu = () => {
             sidebar.classList.add('open');
             overlay?.classList.add('open');
+            document.body.classList.add('mobile-menu-open');
+            menuBtn.setAttribute('aria-expanded', 'true');
+            menuBtn.setAttribute('aria-label', 'Tutup menu');
         };
 
         menuBtn.addEventListener('click', () => {
-            sidebar.classList.contains('open') ? closeMenu() : openMenu();
+            sidebar.classList.contains('open') ? closeMenu(true) : openMenu();
         });
-        overlay?.addEventListener('click', closeMenu);
+        overlay?.addEventListener('click', () => closeMenu(true));
+        sidebar.querySelectorAll('.nav a').forEach((link) => {
+            link.addEventListener('click', () => closeMenu());
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && sidebar.classList.contains('open')) {
+                closeMenu(true);
+            }
+        });
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 760 && sidebar.classList.contains('open')) {
+                closeMenu();
+            }
+        });
     }
 
     /** Form Ajukan Laporan: tampilkan nama file yang dipilih. */

@@ -7,7 +7,7 @@
 
 <div class="topbar">
     <div class="topbar-left">
-        <button class="icon-btn mobile-menu" id="mobileMenu" aria-label="Buka menu">☰</button>
+        <button class="icon-btn mobile-menu" id="mobileMenu" type="button" aria-label="Buka menu" aria-controls="sidebar" aria-expanded="false">☰</button>
         <div class="breadcrumb">
             {{ __('nav.breadcrumb_prefix') }} <span>/</span> <strong>{{ $crumb }}</strong>
         </div>
