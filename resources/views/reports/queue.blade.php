@@ -14,7 +14,6 @@
     </div>
     <div class="toolbar-actions">
         <a class="btn btn-soft" href="{{ route('reports.queue', array_merge(request()->query(), ['export' => 'csv'])) }}">{{ __('reports.btn_export_csv') }}</a>
-        <button class="btn btn-soft" onclick="window.print()">{{ __('reports.btn_print') }}</button>
     </div>
 </div>
 
@@ -60,6 +59,7 @@
                             <td class="action-row">
                                 <a class="table-action" href="{{ route('reports.show', $report) }}">{{ __('common.btn_see_detail') }} ↗</a>
                                 <a class="table-action" href="{{ route('reports.download', $report) }}" download>Unduh</a>
+                                <a class="table-action" href="{{ route('reports.show', ['report' => $report, 'print' => 1]) }}" target="_blank" rel="noopener">Cetak</a>
                             </td>
                         </tr>
                     @empty

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Report;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
@@ -73,6 +74,7 @@ class ExampleTest extends TestCase
             'email' => 'old@example.com',
             'class_name' => 'XI TKJ A',
             'role' => 'reporter',
+            'password' => 'OldSecret123!',
         ]);
 
         $this->actingAs($user)
@@ -90,6 +92,65 @@ class ExampleTest extends TestCase
             'name' => 'New Name',
             'email' => 'new@example.com',
             'class_name' => 'XII RPL B',
+            'avatar' => 'NE',
+        ]);
+
+        $updatedUser = User::findOrFail($user->id);
+        $this->assertTrue(Hash::check('Secret123!', $updatedUser->password));
+        $this->assertFalse(Hash::check('OldSecret123!', $updatedUser->password));
+    }
+
+    public function test_completed_report_is_verified_visible_to_reporter_and_cannot_change_again(): void
+    {
+        $reporter = User::factory()->create(['role' => 'reporter']);
+        $admin = User::factory()->create(['role' => 'admin']);
+        $report = Report::create([
+            'code' => 'SC-0003',
+            'title' => 'Kursi rusak',
+            'location' => 'Ruang Kelas 1.01',
+            'category' => 'Furnitur',
+            'incident_date' => '2026-09-12',
+            'status' => 'Diproses',
+            'priority' => 'Normal',
+            'description' => 'Kaki kursi patah.',
+            'reporter_id' => $reporter->id,
+        ]);
+
+        $this->actingAs($admin)
+            ->patch(route('reports.updateStatus', $report), [
+                'status' => 'Selesai',
+                'note' => 'Perbaikan selesai dan sudah diverifikasi.',
+            ])
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseHas('reports', [
+            'id' => $report->id,
+            'status' => 'Selesai',
+            'note' => 'Perbaikan selesai dan sudah diverifikasi.',
+        ]);
+
+        $this->actingAs($reporter)
+            ->get(route('reports.show', $report))
+            ->assertOk()
+            ->assertSee('Selesai')
+            ->assertSee('Perbaikan selesai dan sudah diverifikasi.');
+
+        $this->actingAs($admin)
+            ->from(route('reports.show', $report))
+            ->patch(route('reports.updateStatus', $report), [
+                'status' => 'Diproses',
+                'note' => 'Coba ubah lagi.',
+            ])
+            ->assertRedirect(route('reports.show', $report))
+            ->assertSessionHas('error');
+
+        $this->get(route('reports.show', $report))
+            ->assertSee('statusnya tidak dapat diubah lagi.');
+
+        $this->assertDatabaseHas('reports', [
+            'id' => $report->id,
+            'status' => 'Selesai',
+            'note' => 'Perbaikan selesai dan sudah diverifikasi.',
         ]);
     }
 

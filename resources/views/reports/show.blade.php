@@ -5,20 +5,80 @@
 
 @section('title', $report->code)
 
+@push('styles')
+<style>
+    @media print {
+        body * {
+            visibility: hidden !important;
+        }
+
+        .app-shell > :not(.main),
+        .main > :not(.page),
+        .page-screen > :not(.report-print-content) {
+            display: none !important;
+        }
+
+        .app-shell,
+        .main,
+        .page,
+        .page-screen {
+            display: block !important;
+            width: auto !important;
+            max-width: none !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: visible !important;
+            background: #fff !important;
+        }
+
+        .report-print-content,
+        .report-print-content * {
+            visibility: visible !important;
+        }
+
+        .report-print-content {
+            padding: 24px;
+            color: #111;
+            background: #fff;
+        }
+
+        .report-print-content .page-head {
+            margin-bottom: 20px;
+        }
+
+        .report-print-content .panel {
+            max-width: none !important;
+            padding: 0 !important;
+            border: 0;
+            box-shadow: none;
+        }
+
+        .report-print-content .no-print {
+            display: none !important;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
 @php($isAdmin = auth()->user()->isAdmin())
 
-<div class="page-head">
-    <div>
-        <p class="eyebrow">{{ $report->code }} · {{ $report->category }}</p>
-        <h1>{{ $report->title }}</h1>
-        <p>Rincian laporan dan riwayat status.</p>
+<div class="report-print-content">
+    <div class="page-head">
+        <div>
+            <p class="eyebrow">{{ $report->code }} · {{ $report->category }}</p>
+            <h1>{{ $report->title }}</h1>
+            <p>Rincian laporan.</p>
+        </div>
+        <div class="toolbar-actions no-print">
+            <a class="btn btn-soft" href="{{ $isAdmin ? route('reports.queue') : route('reports.index') }}">{{ __('common.btn_back') }}</a>
+            @if ($isAdmin)
+                <a class="btn btn-soft" href="{{ route('reports.download', $report) }}" download>Unduh laporan</a>
+                <button class="btn btn-primary" type="button" onclick="window.print()">Cetak laporan</button>
+            @endif
+        </div>
     </div>
-    <div class="toolbar-actions">
-        <a class="btn btn-soft" href="{{ $isAdmin ? route('reports.queue') : route('reports.index') }}">{{ __('common.btn_back') }}</a>
-        <a class="btn btn-soft" href="{{ route('reports.download', $report) }}" download>Unduh laporan</a>
-    </div>
-</div>
 
 <section class="panel" style="padding:22px;max-width:680px">
     <div class="detail-line">
@@ -53,8 +113,8 @@
         <div class="detail-line">
             <span>Bukti</span>
             <span>
-                <a href="{{ asset('storage/' . $report->evidence_path) }}" target="_blank" rel="noopener" class="btn btn-soft btn-sm">Buka foto</a>
-                <a href="{{ asset('storage/' . $report->evidence_path) }}" download class="btn btn-soft btn-sm">Unduh foto</a>
+                <a href="{{ asset('storage/' . $report->evidence_path) }}" target="_blank" rel="noopener" class="btn btn-soft btn-sm no-print">Buka foto</a>
+                <a href="{{ asset('storage/' . $report->evidence_path) }}" download class="btn btn-soft btn-sm no-print">Unduh foto</a>
             </span>
         </div>
         <div style="margin-top:18px">
@@ -62,9 +122,9 @@
         </div>
     @endif
 
-    @if ($isAdmin)
+    @if ($isAdmin && $report->status !== 'Selesai')
         {{-- Hanya admin yang bisa mengubah status & menulis catatan tindak lanjut --}}
-        <form method="POST" action="{{ route('reports.updateStatus', $report) }}" class="modal-actions" style="margin-top:20px">
+        <form method="POST" action="{{ route('reports.updateStatus', $report) }}" class="modal-actions no-print" style="margin-top:20px">
             @csrf
             @method('PATCH')
             <select name="status">
@@ -76,6 +136,17 @@
             <input name="note" placeholder="Catatan petugas" value="{{ $report->note }}">
             <button class="btn btn-primary" type="submit">Simpan status</button>
         </form>
+    @elseif ($report->status === 'Selesai')
+        <div class="success" role="status" style="margin-top:20px">Laporan selesai dan terverifikasi. Status tidak dapat diubah lagi.</div>
     @endif
 </section>
+</div>
 @endsection
+
+@if (request()->boolean('print'))
+    @push('scripts')
+        <script>
+            window.addEventListener('load', () => window.print());
+        </script>
+    @endpush
+@endif

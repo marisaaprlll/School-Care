@@ -19,5 +19,4 @@
     <a class="btn btn-soft btn-sm" href="{{ route('reports.show', $report) }}">
         {{ __('common.btn_see_detail') }} ↗
     </a>
-    <a class="btn btn-soft btn-sm" href="{{ route('reports.download', $report) }}" download>Unduh</a>
 </article>

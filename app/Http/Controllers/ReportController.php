@@ -85,7 +85,7 @@ class ReportController extends Controller
             'priority' => ['nullable', 'string'],
             'title' => ['required', 'string', 'max:150'],
             'description' => ['required', 'string'],
-            'evidence' => ['required', 'image', 'max:1024'], // maks 1 MB, sama seperti versi HTML
+            'evidence' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:5120'],
         ], [], [
             'location' => 'lokasi',
             'category' => 'kategori',
@@ -95,7 +95,17 @@ class ReportController extends Controller
             'evidence' => 'foto bukti',
         ]);
 
-        $evidencePath = $request->file('evidence')->store('reports', 'public');
+        $evidencePath = null;
+
+        if ($request->hasFile('evidence')) {
+            $evidencePath = $request->file('evidence')->store('reports', 'public');
+
+            if ($evidencePath === false) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['evidence' => 'Foto bukti gagal disimpan. Silakan coba lagi.']);
+            }
+        }
 
         Report::create([
             'code' => $this->generateCode(),
@@ -164,6 +174,10 @@ class ReportController extends Controller
      */
     public function updateStatus(Request $request, Report $report): RedirectResponse
     {
+        if ($report->status === 'Selesai') {
+            return back()->with('error', "Laporan {$report->code} sudah selesai dan terverifikasi; statusnya tidak dapat diubah lagi.");
+        }
+
         $data = $request->validate([
             'status' => ['required', 'in:Diajukan,Diproses,Selesai,Ditolak'],
             'note' => ['nullable', 'string'],
@@ -171,7 +185,11 @@ class ReportController extends Controller
 
         $report->update($data);
 
-        return back()->with('success', "Status {$report->code} diperbarui menjadi {$report->status}.");
+        $message = $report->status === 'Selesai'
+            ? "Laporan {$report->code} selesai dan terverifikasi. Status ini tidak dapat diubah lagi."
+            : "Status {$report->code} diperbarui menjadi {$report->status}.";
+
+        return back()->with('success', $message);
     }
 
     private function exportCsv($reports, string $filename): \Symfony\Component\HttpFoundation\StreamedResponse

@@ -76,11 +76,11 @@
             </div>
 
             <div class="field full">
-                <label for="evidence">{{ __('form.label_evidence') }} <span class="required">*</span></label>
+                <label for="evidence">{{ __('form.label_evidence') }}</label>
                 <label class="upload" for="evidence">
                     <strong>{{ __('form.evidence_button') }}</strong>
                     <span>{{ __('form.evidence_hint') }}</span>
-                    <input id="evidence" name="evidence" type="file" accept="image/png,image/jpeg" hidden required>
+                    <input id="evidence" name="evidence" type="file" accept="image/png,image/jpeg" hidden>
                 </label>
                 <small class="muted" id="fileName"></small>
             </div>

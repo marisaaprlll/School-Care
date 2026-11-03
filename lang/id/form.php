@@ -21,7 +21,7 @@ return [
     'placeholder_description' => 'Jelaskan kondisi, kapan mulai terjadi, dan dampaknya terhadap kegiatan belajar...',
     'label_evidence' => 'Foto bukti',
     'evidence_button' => '+ Pilih foto bukti',
-    'evidence_hint' => 'JPG / PNG, maksimal 1 MB',
+    'evidence_hint' => 'Opsional · JPG / PNG, maksimal 5 MB',
 
     'submit' => 'Kirim laporan →',
 
@@ -30,7 +30,7 @@ return [
     'process_step_1_title' => 'Diterima sistem',
     'process_step_1_desc' => 'Nomor laporan dibuat dan tersimpan.',
     'process_step_2_title' => 'Verifikasi petugas',
-    'process_step_2_desc' => 'Kelengkapan lokasi, kategori, dan bukti dicek.',
+    'process_step_2_desc' => 'Kelengkapan lokasi, kategori, dan bukti (jika dilampirkan) dicek.',
     'process_step_3_title' => 'Diproses sampai selesai',
     'process_step_3_desc' => 'Status dan catatan tindak lanjut tampil di riwayatmu.',
     'process_step_4_title' => 'Notifikasi update',

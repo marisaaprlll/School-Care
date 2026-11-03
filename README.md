@@ -85,7 +85,7 @@ Contoh pemakaian di Blade: `{{ __('dashboard.title_reporter') }}`
 | Versi lama (HTML + JS) | Versi Laravel (sekarang) |
 |---|---|
 | Semua HTML digabung dalam satu file `<script>` (template string JS) | Tiap halaman jadi file `.blade.php` sendiri |
-| Data disimpan di `localStorage` browser | Data disimpan di database (MySQL/SQLite) lewat Model & Migration |
+| Data disimpan di `localStorage` browser | Data disimpan di database MySQL `school_care` lewat Model & Migration |
 | Routing manual (`activePage`, `renderCurrent()`) | Routing asli Laravel di `routes/web.php` |
 | Login palsu (cek array `seedUsers` di JS) | Login sungguhan pakai `Auth::attempt()` + password terenkripsi |
 | Semua teks tertulis langsung di template JS | Teks dipisah ke `resources/lang/id/*.php` |
@@ -116,16 +116,18 @@ composer install
 cp .env.example .env
 php artisan key:generate
 
-# 4. (Opsional) pakai SQLite biar cepat coba tanpa install MySQL
-touch database/database.sqlite
-
-# 5. Buat tabel + isi data contoh
+# 4. Buat database MySQL `school_care`, lalu jalankan migrasi dan seeder
 php artisan migrate --seed
 
-# 6. Supaya foto bukti laporan bisa diakses dari browser
+# Alternatif: impor struktur dari school_care.sql, lalu buat data contoh
+# dengan menjalankan: php artisan db:seed
+# Dump menyertakan riwayat migrasi, tetapi tidak berisi baris akun/laporan/sesi.
+# Import lewat phpMyAdmin atau jalankan: mysql -u root school_care < school_care.sql
+
+# 5. Supaya foto bukti laporan bisa diakses dari browser
 php artisan storage:link
 
-# 7. Jalankan
+# 6. Jalankan
 php artisan serve
 ```
 
@@ -133,7 +135,6 @@ Buka `http://localhost:8000`, lalu login pakai salah satu akun demo:
 
 | Peran | Email | Password |
 |---|---|---|
-| Pelapor | `siswa@schoolcare.id` | `SchoolCare123!` |
 | Admin / Petugas Sarpras | `admin@schoolcare.id` | `SchoolCare123!` |
 
 ---

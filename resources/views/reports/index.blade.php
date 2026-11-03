@@ -14,7 +14,6 @@
     </div>
     <div class="toolbar-actions">
         <a class="btn btn-soft" href="{{ route('reports.index', array_merge(request()->query(), ['export' => 'csv'])) }}">{{ __('reports.btn_export_csv') }}</a>
-        <button class="btn btn-soft" onclick="window.print()">{{ __('reports.btn_print') }}</button>
         <a class="btn btn-primary" href="{{ route('reports.create') }}">{{ __('reports.btn_new_report') }}</a>
     </div>
 </div>

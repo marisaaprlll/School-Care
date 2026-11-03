@@ -27,6 +27,9 @@
                 @if (session('success'))
                     <div class="success" style="margin-bottom:16px">{{ session('success') }}</div>
                 @endif
+                @if (session('error'))
+                    <div class="error" role="alert" style="margin-bottom:16px">{{ session('error') }}</div>
+                @endif
 
                 {{-- Konten tiap halaman ditulis di sini lewat @yield('content') --}}
                 @yield('content')

@@ -35,8 +35,11 @@ class ProfileController extends Controller
         $user->email = $data['email'];
         $user->class_name = $data['class_name'];
 
+        $initials = preg_replace('/[^A-Za-z]/', '', $data['name']);
+        $user->avatar = strtoupper(substr($initials ?: 'US', 0, 2));
+
         if (! empty($data['password'])) {
-            $user->password = Hash::make($data['password']);
+            $user->password = $data['password'];
         }
 
         $user->save();
