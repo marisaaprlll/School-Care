@@ -153,5 +153,8 @@ Buka `http://localhost:8000`, lalu login pakai salah satu akun demo:
 
 - Halaman utama hanya menampilkan login. Registrasi publik dinonaktifkan.
 - Admin memiliki menu **Buat Akun** terpisah untuk membuat akun Pelapor atau Admin lain.
+- Admin dapat mengimpor CSV, Excel modern (`.xlsx`), atau Word (`.docx`) dari halaman **Buat Akun** (maksimal 100 akun; seluruh data divalidasi sebelum akun disimpan). Ekstensi PHP ZIP (`extension=zip`) harus aktif untuk membaca file Excel dan Word.
+- Excel dibaca dari lembar pertama, sedangkan Word dibaca dari tabel pertama. Baris pertama wajib berisi header `name`, `email`, `role`, `class_name`, dan `password`; setiap baris berikutnya berisi satu akun. Peran diisi `reporter` atau `admin`, dan password minimal 8 karakter.
+- Unduh `public/templates/template-akun.csv` dari halaman **Buat Akun** untuk contoh format impor.
 - Profil hanya berisi pengaturan profil dan logout.
 - Daftar akun yang dibuat Admin tampil di halaman **Buat Akun** dan tersimpan di database.

@@ -8,9 +8,8 @@ use App\Models\Report;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ReportController extends Controller
 {
@@ -19,11 +18,10 @@ class ReportController extends Controller
      * Tampilan: resources/views/reports/index.blade.php
      * Hanya menampilkan laporan milik user yang sedang login.
      */
-    public function index(Request $request): View|\Symfony\Component\HttpFoundation\StreamedResponse
+    public function index(Request $request): View|StreamedResponse
     {
         $filters = $this->reportFilters($request);
-        $reports = $this->filteredReports($request, false)
-            ->latest('updated_at')
+        $reports = $this->orderedReports($request, false)
             ->get();
 
         if ($request->boolean('export') || $request->get('export') === 'csv') {
@@ -44,11 +42,10 @@ class ReportController extends Controller
      * Tampilan: resources/views/reports/queue.blade.php
      * Menampilkan seluruh laporan dari semua pelapor.
      */
-    public function queue(Request $request): View|\Symfony\Component\HttpFoundation\StreamedResponse
+    public function queue(Request $request): View|StreamedResponse
     {
         $filters = $this->reportFilters($request);
-        $reports = $this->filteredReports($request, true)
-            ->latest('updated_at')
+        $reports = $this->orderedReports($request, true)
             ->get();
 
         if ($request->boolean('export') || $request->get('export') === 'csv') {
@@ -138,7 +135,7 @@ class ReportController extends Controller
         return view('reports.show', compact('report'));
     }
 
-    public function download(Request $request, Report $report): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function download(Request $request, Report $report): StreamedResponse
     {
         abort_unless(
             $request->user()->isAdmin() || $report->reporter_id === $request->user()->id,
@@ -162,10 +159,10 @@ class ReportController extends Controller
                 $report->description,
                 $report->note,
                 $report->reporter?->name ?? '-',
-                $report->evidence_path ? asset('storage/' . $report->evidence_path) : '-',
+                $report->evidence_path ? asset('storage/'.$report->evidence_path) : '-',
             ]);
             fclose($handle);
-        }, $report->code . '.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+        }, $report->code.'.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
 
     /**
@@ -192,7 +189,7 @@ class ReportController extends Controller
         return back()->with('success', $message);
     }
 
-    private function exportCsv($reports, string $filename): \Symfony\Component\HttpFoundation\StreamedResponse
+    private function exportCsv($reports, string $filename): StreamedResponse
     {
         return response()->streamDownload(function () use ($reports) {
             $handle = fopen('php://output', 'w');
@@ -251,6 +248,13 @@ class ReportController extends Controller
             ->when($includeReporter, fn ($query) => $query->with('reporter'));
     }
 
+    private function orderedReports(Request $request, bool $includeReporter)
+    {
+        return $this->filteredReports($request, $includeReporter)
+            ->orderByWorkflowStatus()
+            ->latest('updated_at');
+    }
+
     private function reportFilters(Request $request): array
     {
         return [
@@ -299,6 +303,6 @@ class ReportController extends Controller
     {
         $last = Report::orderByDesc('id')->value('id') ?? 240;
 
-        return 'SC-' . str_pad((string) ($last + 1), 4, '0', STR_PAD_LEFT);
+        return 'SC-'.str_pad((string) ($last + 1), 4, '0', STR_PAD_LEFT);
     }
 }

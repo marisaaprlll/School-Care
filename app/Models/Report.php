@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,6 +40,13 @@ class Report extends Model
     public function reporter()
     {
         return $this->belongsTo(User::class, 'reporter_id');
+    }
+
+    public function scopeOrderByWorkflowStatus(Builder $query): Builder
+    {
+        return $query->orderByRaw(
+            "CASE status WHEN 'Diajukan' THEN 0 WHEN 'Diproses' THEN 1 WHEN 'Selesai' THEN 2 WHEN 'Ditolak' THEN 3 ELSE 4 END"
+        );
     }
 
     /** Kelas CSS pill status, dipakai di Blade: {{ $report->statusPillClass() }} */

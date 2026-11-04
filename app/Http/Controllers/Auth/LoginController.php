@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /**
  * Menangani halaman & proses login/logout.
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
  */
 class LoginController extends Controller
 {
-    public function showLoginForm(): \Illuminate\View\View
+    public function showLoginForm(): View
     {
         return view('auth.login');
     }
@@ -35,14 +35,6 @@ class LoginController extends Controller
             return back()
                 ->withErrors(['email' => 'Email atau password salah. Coba lagi.'])
                 ->onlyInput('email');
-        }
-
-        $user = Auth::user();
-        $expectedRole = User::roleFromEmail($user->email);
-
-        if ($user->role !== $expectedRole) {
-            $user->role = $expectedRole;
-            $user->save();
         }
 
         $request->session()->regenerate();

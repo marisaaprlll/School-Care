@@ -21,9 +21,11 @@ class DashboardController extends Controller
         $isAdmin = $user->isAdmin();
 
         // Pelapor hanya melihat laporannya sendiri, Admin melihat semua laporan.
-        $reports = $isAdmin
-            ? Report::latest('updated_at')->get()
-            : Report::where('reporter_id', $user->id)->latest('updated_at')->get();
+        $reports = Report::query()
+            ->when(! $isAdmin, fn ($query) => $query->where('reporter_id', $user->id))
+            ->orderByWorkflowStatus()
+            ->latest('updated_at')
+            ->get();
 
         $counts = [
             'Diajukan' => $reports->where('status', 'Diajukan')->count(),
