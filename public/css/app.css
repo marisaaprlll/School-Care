@@ -1626,9 +1626,9 @@ tr:last-child td {
 
 
 /* ============================================================
-   10. RESPONSIVE — MOBILE (<=760px)
+   10. RESPONSIVE — MOBILE (<=820px)
    ============================================================ */
-@media(max-width:760px) {
+@media(max-width:820px) {
   body {
     min-width:0;
   }
@@ -1872,3 +1872,146 @@ tr:last-child td {
    ACCOUNT MANAGEMENT: Admin-only page, separate from profile
    ================================================================ */
 .account-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr);gap:24px;align-items:start}.account-create-panel{padding:26px}.account-panel-heading{display:flex;align-items:center;gap:13px;margin-bottom:24px}.account-panel-heading h2{font:700 1.35rem/1.2 'Space Grotesk',sans-serif;letter-spacing:-.04em;margin:0}.account-panel-heading p{color:var(--muted);font-size:.82rem;margin:4px 0 0}.account-panel-icon{width:42px;height:42px;border-radius:14px;background:var(--yellow);color:var(--navy2);display:grid;place-items:center;font-size:1.35rem;font-weight:700}.account-help-panel{padding:26px;background:var(--navy);color:var(--paper)}.account-help-panel h2{font:700 1.45rem/1.12 'Space Grotesk',sans-serif;letter-spacing:-.05em;margin:10px 0}.account-help-panel>p:not(.eyebrow){color:oklch(82% .035 255);font-size:.82rem;margin:0 0 22px}.role-note{display:grid;grid-template-columns:max-content 1fr;gap:10px;align-items:center;padding:13px 0;border-top:1px solid oklch(100% 0 0 / .14);font-size:.77rem;color:oklch(86% .03 255)}.accounts-list-panel{margin-top:24px}.accounts-table{min-width:760px}.account-avatar{width:32px;height:32px;border-radius:11px;background:var(--mint);color:var(--navy2);display:grid;place-items:center;font-size:.7rem;font-weight:700;flex:0 0 auto}.login-card-v3{max-height:none}.login-kicker{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.75rem;margin-bottom:24px}.login-kicker-dot{width:9px;height:9px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 5px var(--mintSoft)}.login-footer-note{padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.78rem;margin:24px 0 0}@media(max-width:1100px){.account-layout{grid-template-columns:1fr}}@media(max-width:760px){.account-create-panel{padding:20px}.account-help-panel{padding:20px}.accounts-list-panel{margin-top:18px}.account-panel-heading{align-items:flex-start}}
+
+/* Keep every page usable on narrow phone screens. */
+@media(max-width:820px) {
+  .app-shell {
+    display:block;
+    width:100%;
+  }
+
+  .main,
+  .page,
+  .page-screen,
+  .panel,
+  .hero {
+    min-width:0;
+    max-width:100%;
+  }
+
+  .main {
+    width:100%;
+    overflow-x:clip;
+  }
+
+  .page-head,
+  .list-toolbar,
+  .panel-head {
+    min-width:0;
+  }
+
+  .page-head>div,
+  .panel-head>div {
+    min-width:0;
+  }
+
+  .page-head .toolbar-actions {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    width:100%;
+    margin-top:16px;
+  }
+
+  .toolbar-actions .btn {
+    min-width:0;
+    padding:10px 8px;
+    text-align:center;
+  }
+
+  .content-grid,
+  .form-layout,
+  .admin-grid,
+  .profile-grid,
+  .master-grid,
+  .account-layout {
+    grid-template-columns:minmax(0,1fr);
+  }
+
+  .report-grid {
+    grid-template-columns:minmax(0,1fr);
+  }
+
+  .form-grid {
+    grid-template-columns:minmax(0,1fr);
+  }
+
+  .field.full {
+    grid-column:auto;
+  }
+
+  .table-wrap,
+  .admin-table {
+    max-width:100%;
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .table-wrap table {
+    width:max-content;
+    min-width:650px;
+  }
+
+  .accounts-table {
+    min-width:760px;
+  }
+
+  input,
+  select,
+  textarea {
+    min-width:0;
+    font-size:16px;
+  }
+
+  .status-row {
+    grid-template-columns:minmax(72px,auto) minmax(0,1fr) 30px;
+  }
+}
+
+@media(max-width:480px) {
+  .auth-screen-v3 .auth-visual {
+    min-height:0;
+    padding:24px 20px 28px;
+    gap:26px;
+  }
+
+  .auth-screen-v3 .auth-copy h1 {
+    font-size:clamp(2rem,10vw,2.6rem);
+  }
+
+  .auth-screen-v3 .auth-points {
+    grid-template-columns:1fr;
+  }
+
+  .auth-screen-v3 .auth-point {
+    padding-top:9px;
+  }
+
+  .auth-screen-v3 .auth-panel {
+    padding:26px 18px 34px;
+  }
+
+  .page-head .toolbar-actions {
+    grid-template-columns:1fr;
+  }
+
+  .hero-actions,
+  .form-footer {
+    flex-direction:column;
+  }
+
+  .form-footer {
+    flex-direction:column-reverse;
+  }
+
+  .hero-actions .btn,
+  .form-footer .btn {
+    width:100%;
+  }
+
+  .account-create-panel,
+  .account-help-panel,
+  .profile-card {
+    padding:18px;
+  }
+}

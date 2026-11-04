@@ -80,7 +80,7 @@
             }
         });
         window.addEventListener('resize', () => {
-            if (window.innerWidth > 760 && sidebar.classList.contains('open')) {
+            if (window.innerWidth > 820 && sidebar.classList.contains('open')) {
                 closeMenu();
             }
         });
