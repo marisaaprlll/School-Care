@@ -864,9 +864,46 @@ to {
 .stats {
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
-  margin:28px 0;
   border-top:1px solid var(--line);
   border-bottom:1px solid var(--line);
+}
+
+.dashboard-summary {
+  display:grid;
+  grid-template-columns:minmax(0,1.8fr) minmax(240px,1fr);
+  gap:20px;
+  align-items:stretch;
+  margin:28px 0;
+}
+
+.dashboard-summary .stats {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  margin:0;
+}
+
+.dashboard-summary .stat:nth-child(2) {
+  border-right:0;
+}
+
+.dashboard-summary .stat:nth-child(-n+2) {
+  border-bottom:1px solid var(--line);
+}
+
+.summary-map {
+  padding:18px;
+}
+
+.summary-map h2 {
+  margin:0 0 12px;
+  font:700 1rem 'Space Grotesk',sans-serif;
+}
+
+.summary-map img {
+  width:100%;
+  aspect-ratio:4/3;
+  object-fit:contain;
+  border-radius:12px;
+  background:var(--surface2);
 }
 
 .stat {
@@ -905,7 +942,7 @@ to {
 /* --- 3c. Grid tabel + panel samping (Ringkasan) --- */
 .content-grid {
   display:grid;
-  grid-template-columns:minmax(0,1.4fr) minmax(300px,.6fr);
+  grid-template-columns:minmax(0,1fr);
   gap:28px;
   align-items:start;
 }
@@ -1388,6 +1425,17 @@ tr:last-child td {
   font-size:.78rem;
 }
 
+.report-card-actions {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.report-card-actions form {
+  margin:0;
+}
+
 .report-meta {
   display:flex;
   gap:7px;
@@ -1423,6 +1471,7 @@ tr:last-child td {
 .action-row {
   display:flex;
   gap:7px;
+  flex-wrap:wrap;
   flex-wrap:wrap;
 }
 
@@ -1770,6 +1819,14 @@ tr:last-child td {
 
 .stats {
   grid-template-columns:repeat(2,1fr);
+}
+
+.dashboard-summary {
+  grid-template-columns:1fr;
+}
+
+.summary-map img {
+  max-height:360px;
 }
 
 .stat:nth-child(2) {

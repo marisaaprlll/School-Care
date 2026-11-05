@@ -16,7 +16,14 @@
         <span>◷ {{ $report->incident_date->translatedFormat('d M Y') }}</span>
         <span>▣ {{ $report->category }}</span>
     </div>
-    <a class="btn btn-soft btn-sm" href="{{ route('reports.show', $report) }}">
-        {{ __('common.btn_see_detail') }} ↗
-    </a>
+    <div class="report-card-actions">
+        <a class="btn btn-soft btn-sm" href="{{ route('reports.show', $report) }}">
+            {{ __('common.btn_see_detail') }} ↗
+        </a>
+        <form method="POST" action="{{ route('reports.destroy', $report) }}" onsubmit="return confirm('Hapus laporan ini secara permanen?')">
+            @csrf
+            @method('DELETE')
+            <button class="btn btn-coral btn-sm" type="submit">Hapus</button>
+        </form>
+    </div>
 </article>

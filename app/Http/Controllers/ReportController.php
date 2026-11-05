@@ -8,6 +8,7 @@ use App\Models\Report;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -79,7 +80,6 @@ class ReportController extends Controller
             'location' => ['required', 'string'],
             'category' => ['required', 'string'],
             'incident_date' => ['required', 'date'],
-            'priority' => ['nullable', 'string'],
             'title' => ['required', 'string', 'max:150'],
             'description' => ['required', 'string'],
             'evidence' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:5120'],
@@ -111,7 +111,7 @@ class ReportController extends Controller
             'category' => $data['category'],
             'incident_date' => $data['incident_date'],
             'status' => 'Diajukan',
-            'priority' => $data['priority'] ?? 'Normal',
+            'priority' => 'Belum dinilai',
             'description' => $data['description'],
             'evidence_path' => $evidencePath,
             'reporter_id' => $request->user()->id,
@@ -133,6 +133,48 @@ class ReportController extends Controller
         );
 
         return view('reports.show', compact('report'));
+    }
+
+    public function destroy(Request $request, Report $report): RedirectResponse
+    {
+        abort_unless(
+            ! $request->user()->isAdmin() && $report->reporter_id === $request->user()->id,
+            403
+        );
+
+        $evidencePath = $report->evidence_path;
+
+        if (! $report->delete()) {
+            return back()->with('error', 'Laporan gagal dihapus. Silakan coba lagi.');
+        }
+
+        if (
+            $evidencePath
+            && Storage::disk('public')->exists($evidencePath)
+            && ! Storage::disk('public')->delete($evidencePath)
+        ) {
+            return redirect()->route('reports.index')
+                ->with('error', 'Laporan berhasil dihapus, tetapi foto bukti gagal dihapus.');
+        }
+
+        return redirect()->route('reports.index')
+            ->with('success', 'Laporan berhasil dihapus.');
+    }
+
+    public function evidence(Request $request, Report $report): StreamedResponse
+    {
+        abort_unless(
+            $request->user()->isAdmin() || $report->reporter_id === $request->user()->id,
+            403
+        );
+        abort_unless(
+            $report->evidence_path && Storage::disk('public')->exists($report->evidence_path),
+            404
+        );
+
+        return $request->boolean('download')
+            ? Storage::disk('public')->download($report->evidence_path)
+            : Storage::disk('public')->response($report->evidence_path);
     }
 
     public function download(Request $request, Report $report): StreamedResponse
@@ -171,20 +213,23 @@ class ReportController extends Controller
      */
     public function updateStatus(Request $request, Report $report): RedirectResponse
     {
-        if ($report->status === 'Selesai') {
-            return back()->with('error', "Laporan {$report->code} sudah selesai dan terverifikasi; statusnya tidak dapat diubah lagi.");
-        }
-
         $data = $request->validate([
-            'status' => ['required', 'in:Diajukan,Diproses,Selesai,Ditolak'],
+            'priority' => ['required', 'in:Normal,Urgent,Darurat'],
+            'status' => [$report->status === 'Selesai' ? 'nullable' : 'required', 'in:Diajukan,Diproses,Selesai,Ditolak'],
             'note' => ['nullable', 'string'],
         ]);
+
+        if ($report->status === 'Selesai') {
+            $report->update(['priority' => $data['priority']]);
+
+            return back()->with('success', "Prioritas {$report->code} diperbarui menjadi {$report->priority}. Status selesai tetap.");
+        }
 
         $report->update($data);
 
         $message = $report->status === 'Selesai'
-            ? "Laporan {$report->code} selesai dan terverifikasi. Status ini tidak dapat diubah lagi."
-            : "Status {$report->code} diperbarui menjadi {$report->status}.";
+            ? "Prioritas {$report->code} diperbarui menjadi {$report->priority}. Laporan selesai dan statusnya tidak dapat diubah lagi."
+            : "Status {$report->code} diperbarui menjadi {$report->status} dan prioritas menjadi {$report->priority}.";
 
         return back()->with('success', $message);
     }

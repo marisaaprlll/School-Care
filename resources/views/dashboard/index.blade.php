@@ -53,10 +53,18 @@
 </div>
 
 {{-- Kartu statistik --}}
-<div class="stats">
-    @foreach ($stats as $stat)
-        <x-stat-card :label="$stat['label']" :value="$stat['value']" :note="$stat['note']" />
-    @endforeach
+<div class="dashboard-summary">
+    <div class="stats">
+        @foreach ($stats as $stat)
+            <x-stat-card :label="$stat['label']" :value="$stat['value']" :note="$stat['note']" />
+        @endforeach
+    </div>
+    <section class="panel summary-map">
+        <h2>Denah Sekolah</h2>
+        <a href="{{ asset('denah.jpeg') }}" target="_blank" rel="noopener">
+            <img src="{{ asset('denah.jpeg') }}" alt="Denah lokasi dan ruang sekolah">
+        </a>
+    </section>
 </div>
 
 {{-- Tabel laporan terbaru --}}

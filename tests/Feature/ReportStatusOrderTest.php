@@ -35,11 +35,15 @@ class ReportStatusOrderTest extends TestCase
         $this->actingAs($admin)
             ->get(route('reports.queue'))
             ->assertOk()
+            ->assertSee('Unduh')
+            ->assertSee('Cetak')
+            ->assertSee('class="btn btn-soft btn-sm"', false)
             ->assertSeeInOrder($expectedOrder);
 
         $this->actingAs($admin)
             ->get(route('dashboard'))
             ->assertOk()
+            ->assertSee(asset('denah.jpeg'), false)
             ->assertSeeInOrder($expectedOrder);
 
         $this->actingAs($reporter)

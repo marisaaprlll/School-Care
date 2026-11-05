@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * Report model — satu baris = satu tiket pengaduan sarana/prasarana.
  *
  * Status yang dipakai di seluruh aplikasi: Diajukan, Diproses, Selesai, Ditolak.
- * Prioritas: Normal, Urgent (mengganggu kegiatan), Darurat (berisiko keselamatan).
+ * Prioritas ditetapkan admin: Belum dinilai, Normal, Urgent, atau Darurat.
  */
 class Report extends Model
 {

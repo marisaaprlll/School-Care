@@ -37,6 +37,7 @@
                 <label for="reportPriority">Tingkat kerusakan</label>
                 <select id="reportPriority" name="priority">
                     <option value="">Semua tingkat</option>
+                    <option value="Belum dinilai" {{ $priority === 'Belum dinilai' ? 'selected' : '' }}>Belum dinilai</option>
                     <option value="Normal" {{ $priority === 'Normal' ? 'selected' : '' }}>Normal</option>
                     <option value="Urgent" {{ $priority === 'Urgent' ? 'selected' : '' }}>Urgent</option>
                     <option value="Darurat" {{ $priority === 'Darurat' ? 'selected' : '' }}>Darurat</option>

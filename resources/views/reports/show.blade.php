@@ -113,32 +113,51 @@
         <div class="detail-line">
             <span>Bukti</span>
             <span>
-                <a href="{{ asset('storage/' . $report->evidence_path) }}" target="_blank" rel="noopener" class="btn btn-soft btn-sm no-print">Buka foto</a>
-                <a href="{{ asset('storage/' . $report->evidence_path) }}" download class="btn btn-soft btn-sm no-print">Unduh foto</a>
+                <a href="{{ route('reports.evidence', $report) }}" target="_blank" rel="noopener" class="btn btn-soft btn-sm no-print">Buka foto</a>
+                <a href="{{ route('reports.evidence', ['report' => $report, 'download' => 1]) }}" class="btn btn-soft btn-sm no-print">Unduh foto</a>
             </span>
         </div>
         <div style="margin-top:18px">
-            <img src="{{ asset('storage/' . $report->evidence_path) }}" alt="Bukti foto {{ $report->code }}" style="display:block;max-width:100%;max-height:420px;border-radius:8px;object-fit:contain">
+            <img src="{{ route('reports.evidence', $report) }}" alt="Bukti foto {{ $report->code }}" style="display:block;max-width:100%;max-height:420px;border-radius:8px;object-fit:contain">
         </div>
     @endif
 
-    @if ($isAdmin && $report->status !== 'Selesai')
-        {{-- Hanya admin yang bisa mengubah status & menulis catatan tindak lanjut --}}
+    @if ($isAdmin)
         <form method="POST" action="{{ route('reports.updateStatus', $report) }}" class="modal-actions no-print" style="margin-top:20px">
             @csrf
             @method('PATCH')
-            <select name="status">
-                <option value="Diajukan" {{ $report->status === 'Diajukan' ? 'selected' : '' }}>{{ __('common.status_diajukan') }}</option>
-                <option value="Diproses" {{ $report->status === 'Diproses' ? 'selected' : '' }}>{{ __('common.status_diproses') }}</option>
-                <option value="Selesai" {{ $report->status === 'Selesai' ? 'selected' : '' }}>{{ __('common.status_selesai') }}</option>
-                <option value="Ditolak" {{ $report->status === 'Ditolak' ? 'selected' : '' }}>{{ __('common.status_ditolak') }}</option>
-            </select>
-            <input name="note" placeholder="Catatan petugas" value="{{ $report->note }}">
+            <div class="detail-line" style="width:100%;text-align:left">
+                <label for="reportPriority">Prioritas</label>
+                <select id="reportPriority" name="priority" required>
+                    <option value="" disabled {{ ! in_array($report->priority, ['Normal', 'Urgent', 'Darurat'], true) ? 'selected' : '' }}>Pilih prioritas</option>
+                    <option value="Normal" {{ $report->priority === 'Normal' ? 'selected' : '' }}>{{ __('common.priority_normal') }}</option>
+                    <option value="Urgent" {{ $report->priority === 'Urgent' ? 'selected' : '' }}>{{ __('common.priority_urgent') }}</option>
+                    <option value="Darurat" {{ $report->priority === 'Darurat' ? 'selected' : '' }}>{{ __('common.priority_darurat') }}</option>
+                </select>
+            </div>
+            @if ($report->status !== 'Selesai')
+                <select name="status">
+                    <option value="Diajukan" {{ $report->status === 'Diajukan' ? 'selected' : '' }}>{{ __('common.status_diajukan') }}</option>
+                    <option value="Diproses" {{ $report->status === 'Diproses' ? 'selected' : '' }}>{{ __('common.status_diproses') }}</option>
+                    <option value="Selesai" {{ $report->status === 'Selesai' ? 'selected' : '' }}>{{ __('common.status_selesai') }}</option>
+                    <option value="Ditolak" {{ $report->status === 'Ditolak' ? 'selected' : '' }}>{{ __('common.status_ditolak') }}</option>
+                </select>
+                <input name="note" placeholder="Catatan petugas" value="{{ $report->note }}">
+            @else
+                <div class="success" role="status">Laporan selesai dan statusnya tidak dapat diubah lagi.</div>
+            @endif
             <button class="btn btn-primary" type="submit">Simpan status</button>
         </form>
     @elseif ($report->status === 'Selesai')
         <div class="success" role="status" style="margin-top:20px">Laporan selesai dan terverifikasi. Status tidak dapat diubah lagi.</div>
     @endif
+    @unless ($isAdmin)
+        <form method="POST" action="{{ route('reports.destroy', $report) }}" class="modal-actions no-print" style="margin-top:20px" onsubmit="return confirm('Hapus laporan ini secara permanen?')">
+            @csrf
+            @method('DELETE')
+            <button class="btn btn-coral" type="submit">Hapus laporan</button>
+        </form>
+    @endunless
 </section>
 </div>
 @endsection

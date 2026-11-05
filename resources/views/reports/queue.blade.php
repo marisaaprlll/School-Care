@@ -57,9 +57,9 @@
                             <td>{{ $report->priority }}</td>
                             <td><span class="pill {{ $report->statusPillClass() }}">{{ $report->status }}</span></td>
                             <td class="action-row">
-                                <a class="table-action" href="{{ route('reports.show', $report) }}">{{ __('common.btn_see_detail') }} ↗</a>
-                                <a class="table-action" href="{{ route('reports.download', $report) }}" download>Unduh</a>
-                                <a class="table-action" href="{{ route('reports.show', ['report' => $report, 'print' => 1]) }}" target="_blank" rel="noopener">Cetak</a>
+                                <a class="btn btn-soft btn-sm" href="{{ route('reports.show', $report) }}">{{ __('common.btn_see_detail') }}</a>
+                                <a class="btn btn-soft btn-sm" href="{{ route('reports.download', $report) }}">Unduh</a>
+                                <a class="btn btn-soft btn-sm" href="{{ route('reports.show', ['report' => $report, 'print' => 1]) }}" target="_blank" rel="noopener">Cetak</a>
                             </td>
                         </tr>
                     @empty

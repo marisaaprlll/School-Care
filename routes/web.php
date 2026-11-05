@@ -43,7 +43,9 @@ Route::middleware('auth')->group(function () {
 
     // Detail satu laporan (Pelapor lihat miliknya, Admin bisa lihat semua)
     Route::get('/laporan/{report}', [ReportController::class, 'show'])->name('reports.show');
+    Route::get('/laporan/{report}/bukti', [ReportController::class, 'evidence'])->name('reports.evidence');
     Route::get('/laporan/{report}/download', [ReportController::class, 'download'])->name('reports.download');
+    Route::delete('/laporan/{report}', [ReportController::class, 'destroy'])->name('reports.destroy');
 
     // Profil (Pelapor & Admin)
     Route::get('/profil', [ProfileController::class, 'edit'])->name('profile.edit');

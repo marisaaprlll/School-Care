@@ -56,15 +56,6 @@
                 <input id="incident_date" name="incident_date" type="date" value="{{ old('incident_date', now()->toDateString()) }}" required>
             </div>
 
-            <div class="field">
-                <label for="priority">{{ __('form.label_priority') }}</label>
-                <select id="priority" name="priority">
-                    <option value="Normal" {{ old('priority', 'Normal') === 'Normal' ? 'selected' : '' }}>{{ __('common.priority_normal') }}</option>
-                    <option value="Urgent" {{ old('priority') === 'Urgent' ? 'selected' : '' }}>{{ __('common.priority_urgent') }}</option>
-                    <option value="Darurat" {{ old('priority') === 'Darurat' ? 'selected' : '' }}>{{ __('common.priority_darurat') }}</option>
-                </select>
-            </div>
-
             <div class="field full">
                 <label for="title">{{ __('form.label_title') }} <span class="required">*</span></label>
                 <input id="title" name="title" type="text" placeholder="{{ __('form.placeholder_title') }}" value="{{ old('title') }}" required>
