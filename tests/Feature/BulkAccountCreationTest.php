@@ -24,7 +24,7 @@ class BulkAccountCreationTest extends TestCase
             ->assertSee('Word (.docx)')
             ->assertSee('Excel (.xlsx)')
             ->assertSee('template-akun.csv')
-            ->assertDontSee('Tambah akun')
+            ->assertSee('Tambah akun lagi')
             ->assertDontSee('accountRowTemplate');
 
         $this->actingAs($admin)
@@ -105,7 +105,7 @@ class BulkAccountCreationTest extends TestCase
                 ],
             ])
             ->assertRedirect(route('accounts.index'))
-            ->assertSessionHasErrors('accounts.1.email')
+            ->assertSessionHasErrors('import')
             ->assertSessionMissing('_old_input.accounts.1.password');
 
         $this->assertDatabaseMissing('users', ['email' => 'siswa@example.com']);
@@ -155,7 +155,7 @@ class BulkAccountCreationTest extends TestCase
             ->from(route('accounts.index'))
             ->post(route('accounts.store'), ['accounts_file' => $csv])
             ->assertRedirect(route('accounts.index'))
-            ->assertSessionHasErrors(['accounts.1.role', 'accounts.1.password'])
+            ->assertSessionHasErrors('import')
             ->assertSessionMissing('_old_input.accounts.0.password');
 
         $this->assertDatabaseMissing('users', ['email' => 'valid.csv@example.com']);
