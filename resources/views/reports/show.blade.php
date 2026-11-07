@@ -80,7 +80,7 @@
         </div>
     </div>
 
-<section class="panel" style="padding:22px;max-width:680px">
+<section class="panel" style="width:100%;padding:22px">
     <div class="detail-line">
         <span>Status</span>
         <strong><span class="pill {{ $report->statusPillClass() }}">{{ $report->status }}</span></strong>
