@@ -124,12 +124,14 @@ php artisan migrate --seed
 # Dump menyertakan riwayat migrasi, tetapi tidak berisi baris akun/laporan/sesi.
 # Import lewat phpMyAdmin atau jalankan: mysql -u root school_care < school_care.sql
 
-# 5. Supaya foto bukti laporan bisa diakses dari browser
+# 5. (Opsional) Buat tautan untuk berkas di disk publik
 php artisan storage:link
 
 # 6. Jalankan
 php artisan serve
 ```
+
+Foto bukti laporan ditampilkan melalui rute aplikasi yang memeriksa hak akses, sehingga tidak bergantung pada tautan `public/storage`.
 
 Buka `http://localhost:8000`, lalu login pakai salah satu akun demo:
 

@@ -47,6 +47,14 @@ class ReportSubmissionTest extends TestCase
     {
         Storage::fake('public');
         $reporter = User::factory()->create(['role' => 'reporter']);
+        $pngChunk = static fn (string $type, string $data): string => pack('N', strlen($data))
+            .$type
+            .$data
+            .pack('N', crc32($type.$data));
+        $png = "\x89PNG\r\n\x1a\n"
+            .$pngChunk('IHDR', pack('NNCCCCC', 1, 1, 8, 2, 0, 0, 0))
+            .$pngChunk('IDAT', gzcompress("\x00\xff\x00\x00"))
+            .$pngChunk('IEND', '');
 
         $this->actingAs($reporter)
             ->post(route('reports.store'), [
@@ -55,7 +63,7 @@ class ReportSubmissionTest extends TestCase
                 'incident_date' => '2026-10-20',
                 'title' => 'Lampu lab mati',
                 'description' => 'Lampu di bagian belakang lab tidak menyala.',
-                'evidence' => UploadedFile::fake()->image('evidence.jpg'),
+                'evidence' => UploadedFile::fake()->createWithContent('bukti.png', $png),
             ])
             ->assertRedirect(route('reports.index'));
 
@@ -68,11 +76,17 @@ class ReportSubmissionTest extends TestCase
 
         $this->get(route('reports.evidence', $report))
             ->assertOk()
-            ->assertHeader('content-type', 'image/jpeg');
+            ->assertHeader('content-type', 'image/png');
 
         $this->get(route('reports.evidence', ['report' => $report, 'download' => 1]))
             ->assertOk()
-            ->assertHeader('content-disposition', 'attachment; filename='.$report->evidence_path);
+            ->assertHeader('content-disposition', 'attachment; filename='.basename($report->evidence_path));
+
+        $otherReporter = User::factory()->create(['role' => 'reporter']);
+
+        $this->actingAs($otherReporter)
+            ->get(route('reports.evidence', $report))
+            ->assertForbidden();
     }
 
     public function test_reporter_can_delete_their_report_and_its_evidence(): void

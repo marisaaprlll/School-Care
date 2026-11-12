@@ -167,6 +167,7 @@ class ReportController extends Controller
             $request->user()->isAdmin() || $report->reporter_id === $request->user()->id,
             403
         );
+
         abort_unless(
             $report->evidence_path && Storage::disk('public')->exists($report->evidence_path),
             404
@@ -201,7 +202,7 @@ class ReportController extends Controller
                 $report->description,
                 $report->note,
                 $report->reporter?->name ?? '-',
-                $report->evidence_path ? asset('storage/'.$report->evidence_path) : '-',
+                $report->evidence_path ? route('reports.evidence', $report) : '-',
             ]);
             fclose($handle);
         }, $report->code.'.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
