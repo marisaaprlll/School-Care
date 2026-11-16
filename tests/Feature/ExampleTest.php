@@ -100,6 +100,29 @@ class ExampleTest extends TestCase
         $this->assertFalse(Hash::check('OldSecret123!', $updatedUser->password));
     }
 
+    public function test_profile_name_can_be_saved_when_class_name_is_empty(): void
+    {
+        $user = User::factory()->create([
+            'name' => 'Old Name',
+            'email' => 'old@example.com',
+            'class_name' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->put('/profil', [
+                'name' => 'New Name',
+                'email' => 'old@example.com',
+                'class_name' => '',
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'New Name',
+            'class_name' => null,
+        ]);
+    }
+
     public function test_completed_report_is_verified_visible_to_reporter_and_cannot_change_again(): void
     {
         $reporter = User::factory()->create(['role' => 'reporter']);

@@ -30,13 +30,15 @@ class ProfileController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:150'],
             'email' => ['required', 'email', 'max:150', Rule::unique('users')->ignore($user->id)],
-            'class_name' => ['required', 'string', 'max:100'],
+            'class_name' => ['nullable', 'string', 'max:100'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
         $user->name = $data['name'];
         $user->email = $data['email'];
-        $user->class_name = $data['class_name'];
+        if (array_key_exists('class_name', $data)) {
+            $user->class_name = $data['class_name'];
+        }
 
         $initials = preg_replace('/[^A-Za-z]/', '', $data['name']);
         $user->avatar = strtoupper(substr($initials ?: 'US', 0, 2));

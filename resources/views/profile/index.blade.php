@@ -39,7 +39,7 @@
 
             <div class="field"><label for="profileName">{{ __('profile.label_name') }}</label><input id="profileName" name="name" value="{{ old('name', $user->name) }}" required></div>
             <div class="field"><label for="profileEmail">{{ __('profile.label_email') }}</label><input id="profileEmail" name="email" value="{{ old('email', $user->email) }}" type="email" required></div>
-            <div class="field"><label for="profileClass">{{ __('profile.label_class') }}</label><input id="profileClass" name="class_name" value="{{ old('class_name', $user->class_name) }}" required></div>
+            <div class="field"><label for="profileClass">{{ __('profile.label_class') }}</label><input id="profileClass" name="class_name" value="{{ old('class_name', $user->class_name) }}"></div>
             <div class="field"><label for="newPassword">{{ __('profile.label_new_password') }}</label><input id="newPassword" name="password" type="password" placeholder="{{ __('profile.placeholder_new_password') }}"></div>
             <div class="field"><label for="newPasswordConfirm">{{ __('profile.label_confirm_password') }}</label><input id="newPasswordConfirm" name="password_confirmation" type="password"></div>
             <button class="btn btn-primary" type="submit">{{ __('profile.submit') }}</button>
